@@ -21,7 +21,7 @@ pipeline {
                 script {
                     sh '''
                     echo "Running as user: $(whoami)"
-                    export PATH="/home/jenkins/.local/bin:$PATH"
+                    export PATH="/var/lib/jenkins/.local/bin:$PATH"
                     which poetry
                     poetry --version
                     poetry install --with dev
