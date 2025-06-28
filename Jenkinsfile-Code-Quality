@@ -18,7 +18,14 @@ pipeline {
         }            
         stage('Setup') {
             steps {
-                sh "poetry install --with dev"
+                script {
+                    sh '''
+                    export PATH="/home/ubuntu/.local/bin:$PATH"
+                    which poetry
+                    poetry --version
+                    poetry install --with dev
+                    '''
+                }
             }
         }
 
