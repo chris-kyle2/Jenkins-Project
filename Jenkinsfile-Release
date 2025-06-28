@@ -57,7 +57,7 @@ pipeline {
                     echo "${tag}"
 
                     sh '''
-                    
+                    export PATH="/var/lib/jenkins/.local/bin:$PATH"
                     poetry run semantic-release publish
                     '''
 
