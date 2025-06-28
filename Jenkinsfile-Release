@@ -49,13 +49,15 @@ pipeline {
             }
             steps {
                 script {
-                    
+                    sh '''
+                    export PATH="/var/lib/jenkins/.local/bin:$PATH"
+                    '''
                     sh 'printenv'
                     def tag = sh(returnStdout: true, script: "poetry run semantic-release version").trim()
                     echo "${tag}"
 
                     sh '''
-                    export PATH="/var/lib/jenkins/.local/bin:$PATH"
+                    
                     poetry run semantic-release publish
                     '''
 
