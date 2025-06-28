@@ -32,7 +32,12 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh "poetry run pytest"
+                script{
+                    sh '''
+                    export PATH="/var/lib/jenkins/.local/bin:$PATH"
+                    poetry run pytest
+                    '''
+                }
             }
         }    
     }
