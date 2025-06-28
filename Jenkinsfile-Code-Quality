@@ -20,6 +20,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                    echo "Running as user: $(whoami)"
                     export PATH="/home/ubuntu/.local/bin:$PATH"
                     which poetry
                     poetry --version
