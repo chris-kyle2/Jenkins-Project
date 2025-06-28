@@ -41,31 +41,39 @@ pipeline {
             }
         }
 
-        stage('Create Release') {
-            when {
-                expression {
-                    return env.GIT_TAG == "" // Only run if GIT_TAG is not set
-                }
-            }
-            steps {
-                script {
-                    sh '''
-                    export PATH="/var/lib/jenkins/.local/bin:$PATH"
-                    '''
-                    sh 'printenv'
-                    def tag = sh(returnStdout: true, script: "poetry run semantic-release version").trim()
-                    echo "${tag}"
-
-                    sh '''
-                    export PATH="/var/lib/jenkins/.local/bin:$PATH"
-                    poetry run semantic-release publish
-                    '''
-
-
-                    echo "Published new tag: ${tag}"
-                }
-            }
+       stage('Create Release') {
+    when {
+        expression {
+            return env.GIT_TAG == "" // Only run if GIT_TAG is not set
         }
+    }
+    steps {
+        script {
+            // Add poetry to PATH before any poetry command
+            sh '''
+                export PATH="/var/lib/jenkins/.local/bin:$PATH"
+                printenv
+                which poetry
+                poetry --version
+                TAG=$(poetry run semantic-release version)
+                echo "TAG=$TAG" > tag_output.txt
+            '''
+
+            // Read tag from output file since returnStdout won’t capture env-modifying script block
+            def tag = readFile('tag_output.txt').trim()
+            echo "Created tag: ${tag}"
+
+            // Run publish with updated PATH
+            sh '''
+                export PATH="/var/lib/jenkins/.local/bin:$PATH"
+                poetry run semantic-release publish
+            '''
+
+            echo "Published new tag: ${tag}"
+        }
+    }
+}
+
 
 
         stage("Build and Deploy") {
