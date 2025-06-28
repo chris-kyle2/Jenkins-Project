@@ -33,7 +33,10 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
-                    sh "poetry install --with dev"
+                    sh '''
+                    export PATH="/var/lib/jenkins/.local/bin:$PATH"
+                    poetry install --with dev
+                    '''
                 }
             }
         }
