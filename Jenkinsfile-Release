@@ -14,7 +14,7 @@ pipeline {
 
     stages {
 
-        stage("Check for Git Tag") {
+        stage("Checking for Git Tag") {
             steps {
                 script {
                     def tag = sh(returnStdout: true, script: "git tag --contains").trim()
